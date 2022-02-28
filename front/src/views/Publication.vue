@@ -24,7 +24,9 @@
             >
           </li>
           <li class="nav-item">
-            <router-link to="/profile" class="nav-link">Profile</router-link>
+            <router-link :to="'/profile/' + this.id" class="nav-link"
+              >Profile</router-link
+            >
           </li>
         </ul>
       </div>
@@ -44,6 +46,9 @@
             <div class="card-body">
               <p class="card-text">{{ currency.content }}</p>
             </div>
+            <button class="btn btn-success" type="submit" @click="edit()">
+              Modifier
+            </button>
             <!-- <img class="card-img-top" src="currency.image" alt="" /> -->
           </div>
         </div>
@@ -56,16 +61,25 @@
 import { mapState } from "vuex";
 export default {
   name: "Publication",
+  data() {
+    return {
+      id: this.$store.state.user.id,
+    };
+  },
   mounted() {
-    // if (this.$store.state.user.id == -1) {
-    //   this.$router.push("/");
-    //   return;
-    // }
-
+    if (this.$store.state.user.id == -1) {
+      this.$router.push("/");
+      return;
+    }
     this.$store.dispatch("getPublications");
   },
   computed: {
     ...mapState(["publications"]),
+  },
+  methods: {
+    edit: function () {
+      this.$router.push("/modification");
+    },
   },
 };
 </script>

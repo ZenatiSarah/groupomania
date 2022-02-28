@@ -24,7 +24,9 @@
             >
           </li>
           <li class="nav-item">
-            <router-link to="/profile" class="nav-link">Profile</router-link>
+            <router-link :to="'/profile/' + this.id" class="nav-link"
+              >Profile</router-link
+            >
           </li>
         </ul>
       </div>
@@ -75,6 +77,7 @@ export default {
     return {
       image: "",
       content: "",
+      id: this.$store.state.user.id,
     };
   },
   methods: {

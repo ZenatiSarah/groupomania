@@ -33,20 +33,15 @@ module.exports = {
             }
         );
     },
-    getProfile: (data, callBack) => {
+    getProfile: (id, callBack) => {
         pool.query(
-            `select * from registration where id=?,userName=?,firstName=?,lastName=?`,
-            [
-                data.id,
-                data.userName,
-                data.firstName,
-                data.lastName
-            ],
+            `select id,email,userName,firstName,lastName from registration`,
+            [id],
             (error, results, fields) => {
                 if (error) {
                     callBack(error);
                 }
-                return callBack(null, results[0]);
+                return callBack(null, results);
             }
         );
     },
@@ -76,10 +71,8 @@ module.exports = {
     },
     updateUser: (data, callBack) => {
         pool.query(
-            `update registration set email=?,password=?,userName=?,firstName=?,lastName=? where id=?`,
+            `update registration set userName=?,firstName=?,lastName=? where id=?`,
             [
-                data.email,
-                data.password,
                 data.userName,
                 data.firstName,
                 data.lastName,

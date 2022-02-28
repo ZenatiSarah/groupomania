@@ -3,6 +3,7 @@ import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
 import Profile from '@/views/Profile.vue';
 import Publication from '@/views/Publication.vue';
+import EditPublication from '@/views/EditPublication.vue';
 
 
 const routes = [
@@ -18,13 +19,18 @@ const routes = [
     },
     {
         name: 'profile',
-        path: '/profile',
+        path: `/profile/:id`,
         component: Profile
     },
     {
         name: 'publication',
         path: '/publication',
         component: Publication
+    },
+    {
+        name: 'editPublication',
+        path: '/modification',
+        component: EditPublication
     },
 ];
 

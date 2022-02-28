@@ -12,7 +12,7 @@ const {
 
 router.get("/", multer, getPosts);
 router.post("/", multer, createPost);
-router.get("/:id", checkToken, getPost);
+router.get("/:id", getPost);
 router.patch("/:id", checkToken, multer, updatePost);
 router.delete("/:id", checkToken, multer, deletePost);
 

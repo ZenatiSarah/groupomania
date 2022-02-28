@@ -36,7 +36,7 @@ module.exports = {
                 console.log(err);
                 return res.status(401).json({
                     success: 0,
-                    data: "Invalid email or password"
+                    data: "Invalid email "
                 });
             }
             const result = compareSync(body.password, results.password);
@@ -46,20 +46,24 @@ module.exports = {
                     expiresIn: "1h"
                 });
                 return res.status(200).json({
-                    success: 1,
-                    message: "login successfully",
+                    id: results.id,
+                    firstName: results.firstName,
+                    lastName: results.lastName,
+                    userName: results.userName,
                     token: jsontoken
                 });
+
             } else {
                 return res.status(401).json({
                     success: 0,
-                    data: "Invalid email or password"
+                    data: "Invalid password"
                 });
             }
         });
     },
     getProfile: (req, res) => {
-        getProfile((err, results) => {
+        const id = req.params.id;
+        getProfile(id, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(404).json({
@@ -107,16 +111,14 @@ module.exports = {
     },
     updateUsers: (req, res) => {
         const body = req.body;
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
         updateUser(body, (err, results) => {
             if (err) {
                 console.log(err);
                 return;
             }
             return res.json({
-                success: 1,
-                message: "updated successfully"
+                message: "updated successfully",
+                data: results
             });
         });
     },

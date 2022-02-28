@@ -28,9 +28,16 @@ const store = createStore({
     state: {
         status: '',
         user: user,
+        id: user.id,
         post: '',
         publications: null,
-        userInfos: '',
+        publication: null,
+        userInfos: {
+            id: '',
+            userName: '',
+            firstName: '',
+            lastName: '',
+        },
     },
     getters: {
         getPublications: state => state.publications,
@@ -61,12 +68,11 @@ const store = createStore({
         setPublications: function (state, listePublications) {
             state.publications = listePublications;
         },
-        setUserInfos: function (state, listuserInfo) {
-            state.userInfos = listuserInfo;
-        },
+
     },
     actions: {
         createAccount: ({ commit }, userInfos) => {
+            console.log(userInfos)
             return new Promise((resolve) => {
                 commit("setStatus", "loading");
                 axios.post('http://localhost:3000/api/users/signup', userInfos)
@@ -87,6 +93,17 @@ const store = createStore({
                     })
             });
         },
+        editUser: ({ commit }, userInfos) => {
+            axios.patch(`http://localhost:3000/api/users/profile/22`, userInfos)
+                .then((response) => {
+                    commit('logUser', response.data);
+                    console.log(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        },
+        //Ajouter une publication
         post: ({ commit }, data) => {
             axios.post('http://localhost:3000/api/publications/', data)
                 .then((response) => {
@@ -94,23 +111,54 @@ const store = createStore({
                     commit('post', response.data);
                 })
         },
+        //Récupérer toutes les publications
         getPublications: ({ commit }) => {
-            axios.get('http://localhost:3000/api/publications/')
-                .then((response) => {
-                    commit('setPublications', response.data.data)
+            commit('setPublications', 'loading');
+            return new Promise((resolve) => {
+                axios.get('http://localhost:3000/api/publications/')
+                    .then((response) => {
+                        commit('setPublications', response.data.data)
+                        resolve(response);
+                    });
+            });
+
+        },
+        //Récupérer une publication
+        /*
+        getPublication: ({ commit }) => {
+            commit('setPublications', 'loading');
+            return new Promise((resolve) => {
+                axios.get('http://localhost:3000/api/publications/:id')
+                    .then((response) => {
+                        commit('setPublications', response.data.data)
+                        console.log(response.data)
+                        resolve(response);
+                    });
+            });
+
+        },*/
+        getUserInfos: ({ commit }) => {
+            axios.get('http://localhost:3000/api/users/')
+                .then(function (response) {
+                    commit('setUserInfos', response.data.data);
+                    console.log(response.data.data)
+                })
+                .catch(function () {
                 });
         },
-        getUserInfos: ({ commit }) => {
+        // Modifier une publication
+        /*
+        editPublications: ({ commit }) => {
+            commit('setPublications', 'loading');
             return new Promise((resolve) => {
-                commit('setUserInfos', '');
-                axios.get('http://localhost:3000/api/users/profile')
+                axios.patch('http://localhost:3000/api/publications/:id')
                     .then((response) => {
-                        commit('setUserInfos', response.data);
-                        console.log(response.data);
-                        resolve(response)
-                    })
+                        commit('setPublications', response.data.data)
+                        resolve(response);
+                    });
             });
-        },
+
+        },*/
     }
 });
 

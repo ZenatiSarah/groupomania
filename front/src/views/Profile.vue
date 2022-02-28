@@ -24,23 +24,18 @@
             >
           </li>
           <li class="nav-item">
-            <router-link to="/profile" class="nav-link">Profile</router-link>
+            <router-link :to="'/profile/' + this.id" class="nav-link"
+              >Profile</router-link
+            >
           </li>
         </ul>
       </div>
     </nav>
 
     <section>
-      <div class="test" v-for="item in userInfos" :key="item">
-        {{ item }}
-      </div>
       <div class="profil">
-        <div v-for="value in userInfos" :key="value">
-          <avatar :fullname="value.userName" size="96"></avatar>
-          <div class="btn-profil">
-            <i class="fas fa-edit"></i>
-            <i class="fas fa-trash"></i>
-          </div>
+        <div>
+          <avatar :fullname="this.userName" :size="100"></avatar>
         </div>
       </div>
       <div class="form">
@@ -49,13 +44,13 @@
             <div class="form-row">
               <div class="col-md-12 mb-12">
                 <label for="validationCustom01">Prénom</label>
+                <p v-if="this.mode == 'infos'">{{ this.firstName }}</p>
                 <input
                   type="text"
                   class="form-control"
-                  id="validationCustom01"
-                  placeholder="First name"
-                  value="Mark"
-                  required
+                  id="firstName"
+                  :value="this.firstName"
+                  v-if="this.mode == 'edit'"
                 />
                 <div class="valid-feedback">Looks good!</div>
               </div>
@@ -63,13 +58,13 @@
             <div class="form-row">
               <div class="col-md-12 mb-12">
                 <label for="validationCustom01">Nom</label>
+                <p v-if="this.mode == 'infos'">{{ this.lastName }}</p>
                 <input
                   type="text"
                   class="form-control"
-                  id="validationCustom01"
-                  placeholder="First name"
-                  value="Mark"
-                  required
+                  id="lastName"
+                  :value="this.lastName"
+                  v-if="this.mode == 'edit'"
                 />
                 <div class="valid-feedback">Looks good!</div>
               </div>
@@ -77,19 +72,34 @@
             <div class="form-row">
               <div class="col-md-12 mb-12">
                 <label for="validationCustom01">Pseudo</label>
+                <p v-if="this.mode == 'infos'">{{ this.userName }}</p>
                 <input
                   type="text"
                   class="form-control"
-                  id="validationCustom01"
-                  placeholder="First name"
-                  value="Mark"
-                  required
+                  v-if="this.mode == 'edit'"
+                  id="userName"
+                  :value="this.userName"
                 />
                 <div class="valid-feedback">Looks good!</div>
               </div>
             </div>
             <div class="btns">
-              <button class="btn btn-success" type="submit">Enregistrer</button>
+              <button
+                v-if="this.mode == 'edit'"
+                class="btn btn-success"
+                type="submit"
+                @click="save()"
+              >
+                Enregistrer
+              </button>
+              <button
+                v-if="this.mode == 'infos'"
+                class="btn btn-success"
+                type="submit"
+                @click="switchToEdit()"
+              >
+                Modifier
+              </button>
               <button class="btn btn-danger" type="submit" @click="logout()">
                 Déconnexion
               </button>
@@ -104,24 +114,65 @@
 
 <script>
 import Avatar from "vue-avatar-component";
-import { mapState } from "vuex";
+import axios from "axios";
 export default {
   name: "Profile",
   components: { Avatar },
+  data() {
+    return {
+      mode: "infos",
+      id: this.$store.state.user.id,
+      firstName: this.$store.state.user.firstName,
+      lastName: this.$store.state.user.lastName,
+      userName: this.$store.state.user.userName,
+    };
+  },
   mounted: function () {
     if (this.$store.state.user.id == -1) {
       this.$router.push("/");
       return;
     }
-    this.$store.dispatch("getUserInfos");
   },
   computed: {
-    ...mapState(["userInfos"]),
+    reloadLocalStorage: function () {
+      return {
+        id: this.$store.state.user.id,
+        firstName: this.$store.state.user.firstName,
+        lastName: this.$store.state.user.lastName,
+        userName: this.$store.state.user.userName,
+      };
+    },
   },
   methods: {
+    switchToEdit: function () {
+      this.mode = "edit";
+    },
+    switchToInfos: function () {
+      this.mode = "infos";
+    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
+    },
+    save: function () {
+      var editFirstName = document.getElementById("firstName").value;
+      var editLastName = document.getElementById("lastName").value;
+      var editUserName = document.getElementById("userName").value;
+
+      var editUser = {
+        id: this.$store.state.user.id,
+        firstName: editFirstName,
+        lastName: editLastName,
+        userName: editUserName,
+      };
+      axios
+        .patch(`http://localhost:3000/api/users/profile/` + this.id, editUser)
+        .then(
+          (response) => console.log(response),
+          localStorage.setItem("user", JSON.stringify(editUser))
+        );
+      this.reloadLocalStorage();
+      this.switchToInfos();
     },
   },
 };
