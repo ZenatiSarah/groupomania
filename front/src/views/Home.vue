@@ -54,22 +54,7 @@
   </div>
 </template>
 
-<style scoped>
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-top: 5rem;
-  align-items: center;
-}
-label,
-textarea {
-  margin-bottom: 2rem;
-}
 
-textarea {
-  width: 30rem;
-}
-</style>
 <script>
 export default {
   name: "Home",
@@ -113,8 +98,23 @@ export default {
 };
 </script>
 
+
 <style scoped>
 #navbarSupportedContent {
   margin-left: 2rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5rem;
+  align-items: center;
+}
+label,
+textarea {
+  margin-bottom: 2rem;
+}
+
+textarea {
+  width: 30rem;
 }
 </style>
