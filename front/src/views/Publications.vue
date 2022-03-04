@@ -16,10 +16,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <router-link to="/home" class="nav-link">Accueil</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/publication" class="nav-link"
+            <router-link to="/publications/" class="nav-link"
               >Publications</router-link
             >
           </li>
@@ -51,13 +48,36 @@
         <button @click="send()" class="btn btn-primary">Publiez !</button>
       </div>
     </div>
+    <div class="card" id="v-for-object">
+      <div
+        class="card-body"
+        v-for="currency in publications"
+        :key="currency.id"
+      >
+        <div class="card" style="width: 18rem">
+          <div class="card-body">
+            <p class="card-text">{{ currency.content }}</p>
+            <p>{{ currency.image }}</p>
+          </div>
+
+          <router-link
+            :to="`/publications/${currency.id}`"
+            class="btn btn-primary"
+            >Modifier</router-link
+          >
+
+          <!-- <img class="card-img-top" src="currency.image" alt="" /> -->
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "Home",
+  name: "Publications",
   data: function () {
     return {
       image: "",
@@ -75,17 +95,13 @@ export default {
       }
     },
     send: function () {
-      const self = this;
       this.$store
         .dispatch("post", {
           image: this.image.name,
           content: this.content,
         })
         .then(function () {
-          self.$router.push("publication");
-        })
-        .then(function (error) {
-          console.log(error);
+          location.reload();
         });
     },
   },
@@ -94,6 +110,10 @@ export default {
       this.$router.push("/");
       return;
     }
+    this.$store.dispatch("getPublications");
+  },
+  computed: {
+    ...mapState(["publications"]),
   },
 };
 </script>
@@ -103,12 +123,14 @@ export default {
 #navbarSupportedContent {
   margin-left: 2rem;
 }
-.form-group {
+.form-group,
+.card {
   display: flex;
   flex-direction: column;
   margin-top: 5rem;
   align-items: center;
 }
+
 label,
 textarea {
   margin-bottom: 2rem;
@@ -116,5 +138,6 @@ textarea {
 
 textarea {
   width: 30rem;
+  height: 65px;
 }
 </style>

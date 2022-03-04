@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '@/views/Login.vue';
-import Home from '@/views/Home.vue';
+import Publications from '@/views/Publications.vue';
 import Profile from '@/views/Profile.vue';
-import Publication from '@/views/Publication.vue';
 import EditPublication from '@/views/EditPublication.vue';
 
 
@@ -13,9 +12,9 @@ const routes = [
         component: Login
     },
     {
-        name: 'home',
-        path: '/home',
-        component: Home
+        name: 'publications',
+        path: '/publications/',
+        component: Publications
     },
     {
         name: 'profile',
@@ -23,13 +22,8 @@ const routes = [
         component: Profile
     },
     {
-        name: 'publication',
-        path: '/publication',
-        component: Publication
-    },
-    {
         name: 'editPublication',
-        path: '/modification',
+        path: '/publications/:id',
         component: EditPublication
     },
 ];

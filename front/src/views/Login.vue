@@ -95,7 +95,7 @@ export default {
   },
   mounted() {
     if (this.$store.state.user.id != -1) {
-      this.$router.push("/home");
+      this.$router.push("/publications");
       return;
     }
 
@@ -140,10 +140,7 @@ export default {
           password: this.password,
         })
         .then(function () {
-          self.$router.push("home");
-        })
-        .then(function (error) {
-          console.log(error);
+          self.$router.push("/publications");
         });
     },
     createAccount: function () {

@@ -118,25 +118,12 @@ const store = createStore({
                 axios.get('http://localhost:3000/api/publications/')
                     .then((response) => {
                         commit('setPublications', response.data.data)
+                        console.log(response.data.data)
                         resolve(response);
                     });
             });
 
         },
-        //Récupérer une publication
-        /*
-        getPublication: ({ commit }) => {
-            commit('setPublications', 'loading');
-            return new Promise((resolve) => {
-                axios.get('http://localhost:3000/api/publications/:id')
-                    .then((response) => {
-                        commit('setPublications', response.data.data)
-                        console.log(response.data)
-                        resolve(response);
-                    });
-            });
-
-        },*/
         getUserInfos: ({ commit }) => {
             axios.get('http://localhost:3000/api/users/')
                 .then(function (response) {
