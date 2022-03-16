@@ -72,7 +72,6 @@ const store = createStore({
     },
     actions: {
         createAccount: ({ commit }, userInfos) => {
-            console.log(userInfos)
             return new Promise((resolve) => {
                 commit("setStatus", "loading");
                 axios.post('http://localhost:3000/api/users/signup', userInfos)
@@ -97,11 +96,7 @@ const store = createStore({
             axios.patch(`http://localhost:3000/api/users/profile/22`, userInfos)
                 .then((response) => {
                     commit('logUser', response.data);
-                    console.log(response.data)
                 })
-                .catch(function (error) {
-                    console.log(error)
-                });
         },
         //Ajouter une publication
         post: ({ commit }, data) => {
@@ -118,7 +113,6 @@ const store = createStore({
                 axios.get('http://localhost:3000/api/publications/')
                     .then((response) => {
                         commit('setPublications', response.data.data)
-                        console.log(response.data.data)
                         resolve(response);
                     });
             });
@@ -128,24 +122,10 @@ const store = createStore({
             axios.get('http://localhost:3000/api/users/')
                 .then(function (response) {
                     commit('setUserInfos', response.data.data);
-                    console.log(response.data.data)
                 })
                 .catch(function () {
                 });
         },
-        // Modifier une publication
-        /*
-        editPublications: ({ commit }) => {
-            commit('setPublications', 'loading');
-            return new Promise((resolve) => {
-                axios.patch('http://localhost:3000/api/publications/:id')
-                    .then((response) => {
-                        commit('setPublications', response.data.data)
-                        resolve(response);
-                    });
-            });
-
-        },*/
     }
 });
 

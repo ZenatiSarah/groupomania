@@ -12,8 +12,8 @@ const {
 
 router.get("/", multer, getPosts);
 router.post("/", multer, createPost);
-router.get("/:id", getPost);
-router.patch("/:id", checkToken, multer, updatePost);
-router.delete("/:id", checkToken, multer, deletePost);
+router.get("/:id", multer, getPost);
+router.patch("/:id", multer, updatePost);
+router.delete("/:id", multer, deletePost);
 
 module.exports = router;

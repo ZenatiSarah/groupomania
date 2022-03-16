@@ -41,6 +41,7 @@
       <div class="btn-form">
         <input
           type="file"
+          accept="image/*"
           class="form-control-file"
           id="inputImage"
           @change="selectFile"
@@ -63,7 +64,8 @@
           <router-link
             :to="`/publications/${currency.id}`"
             class="btn btn-primary"
-            >Modifier</router-link
+          >
+            Voir plus</router-link
           >
 
           <!-- <img class="card-img-top" src="currency.image" alt="" /> -->

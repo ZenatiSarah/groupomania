@@ -100,6 +100,9 @@
               <button class="btn btn-danger" type="submit" @click="logout()">
                 Déconnexion
               </button>
+              <button class="btn btn-danger" type="submit" @click="remove()">
+                Supression du compte
+              </button>
             </div>
           </form>
         </div>
@@ -170,6 +173,14 @@ export default {
         );
       this.reloadLocalStorage();
       this.switchToInfos();
+    },
+    remove() {
+      axios.delete(`http://localhost:3000/api/users/profile/${this.id}`, {
+        data: {
+          id: this.id,
+        },
+      });
+      this.logout();
     },
   },
 };

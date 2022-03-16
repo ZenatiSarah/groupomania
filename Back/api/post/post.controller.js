@@ -65,12 +65,12 @@ module.exports = {
             }
             return res.json({
                 success: 1,
-                message: "updated successfully"
+                message: "updated successfully",
+                data: results
             });
         });
     },
     deletePost: (req, res) => {
-        console.log(req.body)
         const data = req.body;
         deletePost(data, (err, results) => {
             if (err) {
