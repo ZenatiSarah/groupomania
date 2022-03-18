@@ -5,7 +5,6 @@ const instance = axios.create({
     baseURL: 'http://localhost:3000/api/users/'
 });
 
-
 let user = localStorage.getItem('user');
 if (!user) {
     user = {
@@ -30,8 +29,7 @@ const store = createStore({
         user: user,
         id: user.id,
         post: '',
-        publications: null,
-        publication: null,
+        publications: [],
         userInfos: {
             id: '',
             userName: '',
@@ -44,28 +42,28 @@ const store = createStore({
         getUserInfos: state => state.userInfos,
     },
     mutations: {
-        setStatus: function (state, status) {
+        setStatus(state, status) {
             state.status = status;
         },
-        logUser: function (state, user) {
+        logUser(state, user) {
             instance.defaults.headers.common['Authorization'] = user.token;
             localStorage.setItem('user', JSON.stringify(user))
             state.user = user;
         },
-        userInfos: function (state, userInfos) {
+        userInfos(state, userInfos) {
             state.userInfos = userInfos;
         },
-        logout: function (state) {
+        logout(state) {
             state.user = {
                 id: -1,
                 token: ''
             };
             localStorage.removeItem('user')
         },
-        post: function (state, post) {
+        post(state, post) {
             state.post = post;
         },
-        setPublications: function (state, listePublications) {
+        setPublications(state, listePublications) {
             state.publications = listePublications;
         },
 
@@ -92,12 +90,13 @@ const store = createStore({
                     })
             });
         },
+        /*
         editUser: ({ commit }, userInfos) => {
             axios.patch(`http://localhost:3000/api/users/profile/22`, userInfos)
                 .then((response) => {
                     commit('logUser', response.data);
                 })
-        },
+        },*/
         //Ajouter une publication
         post: ({ commit }, data) => {
             axios.post('http://localhost:3000/api/publications/', data)

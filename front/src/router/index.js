@@ -1,35 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '@/views/Login.vue';
-import Publications from '@/views/Publications.vue';
-import Profile from '@/views/Profile.vue';
-import EditPublication from '@/views/EditPublication.vue';
 
 
 const routes = [
     {
         name: 'login',
         path: '/',
-        component: Login
+        component: () => import('@/views/Login.vue')
     },
     {
         name: 'publications',
         path: '/publications/',
-        component: Publications
+        component: () => import('@/views/Publications.vue')
     },
     {
         name: 'profile',
         path: `/profile/:id`,
-        component: Profile
+        component: () => import('@/views/Profile.vue')
     },
     {
         name: 'editPublication',
         path: '/publications/:id',
-        component: EditPublication
+        component: () => import('@/views/EditPublication.vue')
     },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
+    base: 'http://localhost:3000/api/',
     routes
 });
 

@@ -115,13 +115,15 @@
 <script>
 import Avatar from "vue-avatar-component";
 import axios from "axios";
+
 export default {
   name: "Profile",
   components: { Avatar },
   data() {
     return {
       mode: "infos",
-      id: this.$store.state.user.id,
+      profile: {},
+      id: this.$route.params.id,
       firstName: this.$store.state.user.firstName,
       lastName: this.$store.state.user.lastName,
       userName: this.$store.state.user.userName,
@@ -132,11 +134,16 @@ export default {
       this.$router.push("/");
       return;
     }
+    const result = axios.get(
+      `http://localhost:3000/api/users/profile/${this.$route.params.id}`
+    );
+    const profile = result.data;
+    this.profile = profile;
   },
   computed: {
     reloadLocalStorage: function () {
       return {
-        id: this.$store.state.user.id,
+        id: this.$route.params.id,
         firstName: this.$store.state.user.firstName,
         lastName: this.$store.state.user.lastName,
         userName: this.$store.state.user.userName,
@@ -160,13 +167,16 @@ export default {
       var editUserName = document.getElementById("userName").value;
 
       var editUser = {
-        id: this.$store.state.user.id,
+        id: this.$route.params.id,
         firstName: editFirstName,
         lastName: editLastName,
         userName: editUserName,
       };
       axios
-        .patch(`http://localhost:3000/api/users/profile/` + this.id, editUser)
+        .patch(
+          `http://localhost:3000/api/users/profile/${this.$route.params.id}`,
+          editUser
+        )
         .then(
           (response) => console.log(response),
           localStorage.setItem("user", JSON.stringify(editUser))
@@ -175,11 +185,14 @@ export default {
       this.switchToInfos();
     },
     remove() {
-      axios.delete(`http://localhost:3000/api/users/profile/${this.id}`, {
-        data: {
-          id: this.id,
-        },
-      });
+      axios.delete(
+        `http://localhost:3000/api/users/profile/${this.$route.params.id}`,
+        {
+          data: {
+            id: this.$route.params.id,
+          },
+        }
+      );
       this.logout();
     },
   },

@@ -64,29 +64,32 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   name: "EditPublication",
   data() {
     return {
       mode: "imageInfos",
       id: this.$store.state.user.id,
-      idpublications: this.$route.params.id,
-      publication: "",
+      publication: {},
       content: "",
       image: "",
     };
   },
-
-  mounted() {
+  async mounted() {
     if (this.$store.state.user.id == -1) {
       this.$router.push("/");
       return;
     }
-    axios
-      .get(`http://localhost:3000/api/publications/${this.idpublications}`)
-      .then((response) => {
-        this.publication = response.data.data;
-      });
+    const result = await axios.get(
+      `http://localhost:3000/api/publications/${this.$route.params.id}`
+    );
+    const onepublication = result.data.data;
+    this.publication = onepublication;
+  },
+  computed: {
+    ...mapState(["onepublication"]),
   },
   methods: {
     editImage() {
@@ -106,23 +109,38 @@ export default {
     },
     save() {
       var contentEdit = document.getElementById("content").value;
-      axios
-        .patch(
-          `http://localhost:3000/api/publications/${this.idpublications}`,
-          {
-            content: contentEdit,
-            image: this.image.name,
-            id: this.idpublications,
-          }
-        )
-        .then(function () {
-          window.location.href = "/publications/";
-        });
+      if (this.mode == "imageInfos") {
+        axios
+          .patch(
+            `http://localhost:3000/api/publications/${this.$route.params.id}`,
+            {
+              content: contentEdit,
+              image: this.publication.image,
+              id: this.$route.params.id,
+            }
+          )
+          .then(function () {
+            window.location.href = "/publications/";
+          });
+      } else if (this.mode == "imageEdit") {
+        axios
+          .patch(
+            `http://localhost:3000/api/publications/${this.$route.params.id}`,
+            {
+              content: contentEdit,
+              image: this.image.name,
+              id: this.$route.params.id,
+            }
+          )
+          .then(function () {
+            window.location.href = "/publications/";
+          });
+      }
     },
     remove() {
       axios
         .delete(
-          `http://localhost:3000/api/publications/${this.idpublications}`,
+          `http://localhost:3000/api/publications/${this.$route.params.id}`,
           {
             data: {
               id: this.publication.id,
