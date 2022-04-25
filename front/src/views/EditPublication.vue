@@ -117,6 +117,7 @@ export default {
               content: contentEdit,
               image: this.publication.image,
               id: this.$route.params.id,
+              userId: this.id,
             }
           )
           .then(function () {
@@ -130,6 +131,7 @@ export default {
               content: contentEdit,
               image: this.image.name,
               id: this.$route.params.id,
+              userId: this.id,
             }
           )
           .then(function () {

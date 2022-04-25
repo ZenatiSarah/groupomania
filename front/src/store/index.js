@@ -29,6 +29,7 @@ const store = createStore({
         user: user,
         id: user.id,
         post: '',
+        users: [],
         publications: [],
         userInfos: {
             id: '',
@@ -40,6 +41,7 @@ const store = createStore({
     getters: {
         getPublications: state => state.publications,
         getUserInfos: state => state.userInfos,
+        getUsers: state => state.users
     },
     mutations: {
         setStatus(state, status) {
@@ -66,6 +68,9 @@ const store = createStore({
         setPublications(state, listePublications) {
             state.publications = listePublications;
         },
+        setUsers(state, listeUsers) {
+            state.users = listeUsers;
+        },
 
     },
     actions: {
@@ -90,13 +95,6 @@ const store = createStore({
                     })
             });
         },
-        /*
-        editUser: ({ commit }, userInfos) => {
-            axios.patch(`http://localhost:3000/api/users/profile/22`, userInfos)
-                .then((response) => {
-                    commit('logUser', response.data);
-                })
-        },*/
         //Ajouter une publication
         post: ({ commit }, data) => {
             axios.post('http://localhost:3000/api/publications/', data)
@@ -112,6 +110,7 @@ const store = createStore({
                 axios.get('http://localhost:3000/api/publications/')
                     .then((response) => {
                         commit('setPublications', response.data.data)
+                        console.log(response.data.data)
                         resolve(response);
                     });
             });
@@ -124,6 +123,12 @@ const store = createStore({
                 })
                 .catch(function () {
                 });
+        },
+        getUsers: ({ commit }) => {
+            axios.get('http://localhost:3000/api/users/')
+                .then(function (response) {
+                    commit('setUsers', response.data.data);
+                })
         },
     }
 });

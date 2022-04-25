@@ -25,6 +25,11 @@
               >Profile</router-link
             >
           </li>
+          <li class="nav-item">
+            <router-link to="/rechercher/" class="nav-link"
+              >Rechercher</router-link
+            >
+          </li>
         </ul>
       </div>
     </nav>
@@ -101,6 +106,7 @@ export default {
         .dispatch("post", {
           image: this.image.name,
           content: this.content,
+          userId: this.id,
         })
         .then(function () {
           location.reload();

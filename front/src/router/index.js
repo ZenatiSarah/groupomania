@@ -18,6 +18,11 @@ const routes = [
         component: () => import('@/views/Profile.vue')
     },
     {
+        name: 'rechercher',
+        path: `/rechercher/`,
+        component: () => import('@/views/Search.vue')
+    },
+    {
         name: 'editPublication',
         path: '/publications/:id',
         component: () => import('@/views/EditPublication.vue')
