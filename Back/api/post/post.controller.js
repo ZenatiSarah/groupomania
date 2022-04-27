@@ -1,119 +1,100 @@
 const {
+    create,
+    getPost,
+    getPosts,
+    updatePost,
     deletePost
 } = require("./post.service");
 
-const db = require("../../config/database");
 
 module.exports = {
-    createPost: (req, res, next) => {
-        const body = req.body;
+    createPost: (req, res) => {
+        const publicationObject = req.body;
         const mysql = `INSERT INTO post SET ?`
-        const model = {
-            content: body.content,
-            userId: body.userId,
-            image: body.image ? `${req.protocol}://${req.get('host')}/images/${body.image} ` : null
-        }
-        db.query(mysql, model, (err, result) => {
+        const publication = {
+            ...publicationObject,
+            content: publicationObject.content,
+            userId: publicationObject.userId,
+            image: `${req.protocol}://${req.get('host')}/images/${publicationObject.image}`
+        };
+        db.query(mysql, publication, (err, result) => {
             if (err) {
-                return res.status(400).send({
-                    message: "erreur post "
-                })
+                return res.status(400).json({ err })
             } else {
-                return res.status(200).send({
-                    message: "Post réussi !"
-                })
+                return res.status(201).json({ message: "objet enregistré !" })
             }
         })
-
     },
     getPosts: (req, res) => {
-        const body = req.body;
-        const mysql = `SELECT * FROM post`
-
-        db.query(mysql, (err, result) => {
+        getPosts((err, results) => {
             if (err) {
-                return res.status(400).send({
-                    message: "Erreur : Récupération des publications ! "
-                })
-            } else {
-                return res.status(200).send({
-                    message: "Récupération des publications réussi !",
-                    data: result
-                })
+                console.log(err);
+                return;
             }
-        })
-
+            return res.json({
+                success: 1,
+                data: results
+            });
+        });
     },
     getPost: (req, res) => {
-        const body = req.body;
-        const mysql = `SELECT id,content,image FROM post`
-
-        const model = {
-            id: body.id,
-            userId: body.userId,
-            content: body.content,
-            image: `${req.protocol}://${req.get('host')}/images/${body.image}`,
-        }
-        db.query(mysql, model, (err, result) => {
+        const id = req.params.id;
+        getPost(id, (err, results) => {
             if (err) {
-                return res.status(400).send({
-                    message: " Récupération de la publication échoué !"
-                })
-            } else {
-                return res.status(200).send({
-                    message: "Récupération de la publication réussi !",
-                    data: result[0]
-                })
+                console.log(err);
+                return;
             }
-        })
-
+            if (!results) {
+                return res.json({
+                    success: 0,
+                    message: "Record not Found"
+                });
+            }
+            results.password = undefined;
+            return res.json({
+                success: 1,
+                data: results
+            });
+        });
     },
     updatePost: (req, res) => {
-        const mysql = `UPDATE post SET ?`
         const body = req.body;
-        if (body.image) {
-            const model = {
-                id: body.id,
-                content: body.content,
-                userId: body.userId,
-                image: `${req.protocol}://${req.get('host')}/images/${body.image} `
-            }
-            db.query(mysql, model, (err, result) => {
-                if (err) {
-                    console.log(err)
-                    return res.status(400).send({
-                        message: "Erreur : Modification de la publication ! "
-                    })
-                } else {
-                    return res.status(200).send({
-                        message: "Modification de la publication réussi !",
-                        data: result[0]
-                    })
-                }
-            })
-        } else {
-            const model = {
-                id: body.id,
-                content: body.content,
-                userId: body.userId,
-                image: null
-            }
-            db.query(mysql, model, (err, result) => {
-                if (err) {
-                    console.log(err)
-                    return res.status(400).send({
-                        message: "Erreur : Modification de la publication ! "
-                    })
-                } else {
-                    return res.status(200).send({
-                        message: "Modification de la publication réussi !",
-                        data: result[0]
-                    })
-                }
-            })
+        const mysql = `UPDATE post SET ?`
+        console.log(body.id)
+        const publicationObject = body.image ? {
+            content: body.content,
+            userId: body.userId,
+            image: `${req.protocol}://${req.get('host')}/images/${body.image}`
+        } : {
+            content: body.content,
+            userId: body.userId,
+            id: body.id
         };
+
+        if (body.image) {
+            const image = body.image.split('/images')[1];
+            fs.unlink(`images/${image}`, () => {
+                db.query(mysql, { ...publicationObject, id: req.params.id }, (err, results) => {
+                    if (err) {
+                        return res.status(400).send({ message: "Erreur : Modification de la publication ! image" })
+                    } else {
+                        return res.status(200).send({ message: "Modification de la publication réussi !" }, results[0])
+                    }
+                })
+            });
+        } else {
+
+            db.query(mysql, publicationObject, (err, results) => {
+                if (err) {
+                    return res.status(400).send({ err, message: "Erreur : Modification de la publication ! " })
+                } else {
+                    return res.status(200).json({ message: "Modification de la publication réussi !", data: results[0] })
+                }
+            })
+        }
     },
     deletePost: (req, res) => {
+        console.log(req.body)
         const data = req.body;
         deletePost(data, (err, results) => {
             if (err) {
@@ -127,4 +108,3 @@ module.exports = {
         });
     }
 }
-

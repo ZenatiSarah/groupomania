@@ -89,7 +89,7 @@ export default {
     this.publication = onepublication;
   },
   computed: {
-    ...mapState(["onepublication"]),
+    ...mapState(["publication"]),
   },
   methods: {
     editImage() {
