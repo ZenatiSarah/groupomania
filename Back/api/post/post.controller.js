@@ -6,16 +6,23 @@ const {
     deletePost
 } = require("./post.service");
 
+const fs = require('fs');
+const db = require("../../config/database");
+const xss = require("xss");
 
 module.exports = {
     createPost: (req, res) => {
         const publicationObject = req.body;
         const mysql = `INSERT INTO post SET ?`
-        const publication = {
+        const publication = publicationObject.image ? {
             ...publicationObject,
-            content: publicationObject.content,
-            userId: publicationObject.userId,
+            content: xss(publicationObject.content),
+            userId: xss(publicationObject.userId),
             image: `${req.protocol}://${req.get('host')}/images/${publicationObject.image}`
+        } : {
+            content: xss(publicationObject.content),
+            userId: xss(publicationObject.userId),
+            id: xss(publicationObject.id)
         };
         db.query(mysql, publication, (err, result) => {
             if (err) {
@@ -76,7 +83,7 @@ module.exports = {
             fs.unlink(`images/${image}`, () => {
                 db.query(mysql, { ...publicationObject, id: req.params.id }, (err, results) => {
                     if (err) {
-                        return res.status(400).send({ message: "Erreur : Modification de la publication ! image" })
+                        return res.status(400).send({ err, message: "Erreur : Modification de la publication ! image" })
                     } else {
                         return res.status(200).send({ message: "Modification de la publication réussi !" }, results[0])
                     }

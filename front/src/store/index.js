@@ -2,10 +2,11 @@ import { createStore } from 'vuex';
 const axios = require('axios');
 
 const instance = axios.create({
-    baseURL: 'http://localhost:3000/api/users/'
+    baseURL: 'http://localhost:3000/api/'
 });
 
 let user = localStorage.getItem('user');
+
 if (!user) {
     user = {
         id: -1,
@@ -14,7 +15,8 @@ if (!user) {
 } else {
     try {
         user = JSON.parse(user);
-        instance.defaults.headers.common['Authorization'] = user.token;
+        instance.defaults.headers.common['Authorization'] = "Bearer " + user.token;
+
     } catch (ex) {
         user = {
             id: -1,

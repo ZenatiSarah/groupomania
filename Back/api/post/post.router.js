@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { checkToken } = require("../../auth/token");
+const auth = require("../../auth/token");
 const multer = require('../../config/multer');
 
 const {

@@ -59,7 +59,6 @@ module.exports = {
         );
     },
     deletePost: (data, callBack) => {
-        console.log("id", data.id)
         pool.query(
             ` delete from post where id=?`,
             [data.id],
