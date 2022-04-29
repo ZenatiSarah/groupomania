@@ -60,7 +60,7 @@ module.exports = {
     updatePost: (req, res) => {
         const body = req.body;
         const mysql = `UPDATE post SET ?`
-        console.log(body.id)
+
         const publicationObject = body.image ? {
             content: body.content,
             userId: body.userId,
