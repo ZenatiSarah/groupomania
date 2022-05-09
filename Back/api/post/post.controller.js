@@ -9,16 +9,19 @@ const {
 const fs = require('fs');
 const db = require("../../config/database");
 const xss = require("xss");
+const multer = require('../../config/multer')
 
 module.exports = {
     createPost: (req, res) => {
         const publicationObject = req.body;
         const mysql = `INSERT INTO post SET ?`
+
         const publication = publicationObject.image ? {
             ...publicationObject,
             content: xss(publicationObject.content),
             userId: xss(publicationObject.userId),
             image: `${req.protocol}://${req.get('host')}/images/${publicationObject.image}`
+
         } : {
             content: xss(publicationObject.content),
             userId: xss(publicationObject.userId),
