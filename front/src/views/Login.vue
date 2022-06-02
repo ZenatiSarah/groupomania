@@ -1,5 +1,9 @@
 <template>
-  <div class="card">
+<div class="app">
+  <div class="logo">
+    <img src="../assets/icon-left-font.png" alt="Logo groupomania">
+  </div>
+<div class="card">
     <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
     <h1 class="card__title" v-else>Inscription</h1>
     <p class="card__subtitle" v-if="mode == 'login'">
@@ -76,6 +80,8 @@
       </button>
     </div>
   </div>
+</div>
+  
 </template>
 
 <script>
@@ -166,8 +172,44 @@ export default {
 
 
 <style scoped>
+.app{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card{
+  text-align: center;
+    margin: 0 auto;
+    position: relative;
+    top: 40px;
+    width: 35rem;
+    padding: 20px;
+    height: 25rem;
+}
+.logo{
+  width: 25rem;
+  height: 9rem;
+}
+img{
+  width: 100%;
+  height: 100%;
+}
+.card__action{
+  color: #fd2d01;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button {
+      border-radius: 20px;
+    padding: 5px 15px;
+    border: 1px solid;
+}
 .form-row {
   display: flex;
+  justify-content: center;
   margin: 16px 0px;
   gap: 16px;
   flex-wrap: wrap;

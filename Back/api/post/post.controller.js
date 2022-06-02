@@ -9,24 +9,24 @@ const {
 const fs = require('fs');
 const db = require("../../config/database");
 const xss = require("xss");
-const multer = require('../../config/multer')
 
 module.exports = {
     createPost: (req, res) => {
         const publicationObject = req.body;
         const mysql = `INSERT INTO post SET ?`
 
+
         const publication = publicationObject.image ? {
             ...publicationObject,
             content: xss(publicationObject.content),
             userId: xss(publicationObject.userId),
-            image: `${req.protocol}://${req.get('host')}/images/${publicationObject.image}`
+            image: `${req.protocol}://${req.get('host')}/images/${publicationObject.image}` //req.file.filename
 
         } : {
             content: xss(publicationObject.content),
             userId: xss(publicationObject.userId),
             id: xss(publicationObject.id)
-        };
+        }; console.log(publication)
         db.query(mysql, publication, (err, result) => {
             if (err) {
                 return res.status(400).json({ err })
@@ -69,12 +69,12 @@ module.exports = {
     },
     updatePost: (req, res) => {
         const body = req.body;
-        const mysql = `UPDATE post SET ?`
+        const mysql = `UPDATE post SET ? WHERE id=${body.id}`
 
         const publicationObject = body.image ? {
             content: body.content,
             userId: body.userId,
-            image: `${req.protocol}://${req.get('host')}/images/${body.image}`
+            image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         } : {
             content: body.content,
             userId: body.userId,
@@ -88,7 +88,7 @@ module.exports = {
                     if (err) {
                         return res.status(400).send({ err, message: "Erreur : Modification de la publication ! image" })
                     } else {
-                        return res.status(200).send({ message: "Modification de la publication réussi !" }, results[0])
+                        return res.status(200).send({ message: "Modification de la publication réussi !", data: results[0] })
                     }
                 })
             });

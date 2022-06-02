@@ -2,6 +2,7 @@ const router = require("express").Router();
 const auth = require("../../auth/token");
 const multer = require('../../config/multer');
 
+
 const {
     createPost,
     getPost,

@@ -19,6 +19,7 @@ export default {
 }
 #app {
   max-width: 100%;
+  
 }
 
 body {
