@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="accueil">
+     
+    <nav class="navbar navbar-expand-lg navbar-light">
+      
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="logo">
+    <img src="../assets/icon-left-font.png" alt="Logo groupomania">
+  </div>
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link to="/publications/" class="nav-link">Publications</router-link>
@@ -97,14 +102,22 @@ export default {
 
 <style scoped>
 #navbarSupportedContent {
-  margin-left: 2rem;
+  justify-content: space-between;
 }
 
+.logo{
+  width: 25rem;
+  height: 9rem;
+}
+img{
+  width: 100%;
+  height: 100%;
+}
 .form-group,
 .card {
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
+  margin-top: 3rem;
   align-items: center;
 }
 
