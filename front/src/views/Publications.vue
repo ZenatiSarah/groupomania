@@ -45,7 +45,8 @@
 
           <router-link :to="`/publications/${currency.id}`" class="btn btn-primary">
             Voir plus</router-link>
-
+          <button id="shareLinkedin" class="share_linkedin" data-url="https://fr.vuejs.org/v2/guide/events.html" v-on:click="share()">Partager sur linkedin</button>
+          <!--:data-url="`/publications/${currency.id}`"-->
           <!-- <img class="card-img-top" src="currency.image" alt="" /> -->
         </div>
       </div>
@@ -85,6 +86,13 @@ export default {
           location.reload();
         });
     },
+    share(){
+      console.log(this.publications)
+      const btnDataUrl = document.getElementById('shareLinkedin')
+      var url = btnDataUrl.getAttribute('data-url');
+      var shareUrl = "https://www.linkedin.com/shareArticle?url=" + encodeURIComponent(url);
+      window.open(shareUrl)
+    }
   },
   mounted: function () {
     if (this.$store.state.user.id == -1) {
